@@ -5,6 +5,7 @@ class AdCampaignClickInfo(faust.Record):
     cookie: str
     camp_id: str
     is_fake: int
+    time: str
 
 
 

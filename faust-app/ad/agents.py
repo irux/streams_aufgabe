@@ -8,10 +8,10 @@ campaign = app.topic("ad_campaign", value_type=AdCampaignClickInfo)
 campaign_statistics = app.topic("ad_campaign_statistics", value_type=AdCampaignStatistics)
 
 
+
 @app.agent(campaign, sink=[campaign_statistics])
 async def count_occurrence(stream_campaign: StreamT[str]):
     async for click in stream_campaign.group_by(AdCampaignClickInfo.camp_id):
-
         if click.camp_id not in ad_info:
             ad_info[click.camp_id] = build_analytics_object(click.camp_id)
 
@@ -30,7 +30,7 @@ async def count_occurrence(stream_campaign: StreamT[str]):
         yield persistant_ad
 
 
-def build_analytics_object(campaign_id):
+def build_analytics_object(campaign_id) -> AdCampaignStatistics:
     info = {
         "camp_id": campaign_id,
         "fake_clicks": 0,

@@ -4,6 +4,8 @@ services:
     image: wurstmeister/zookeeper
     ports:
       - "2181:2181"
+    tmpfs: "/datalog"
+
   kafka:
     container_name: kafka-container
     build: ./kafka
@@ -15,6 +17,8 @@ services:
       KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,OUTSIDE://localhost:9094
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+    volumes:
+      - //var/run/docker.sock:/var/run/docker.sock
 
   faust-service:
     build:
@@ -25,3 +29,11 @@ services:
     restart: on-failure
     ports:
       - "6066:6066"
+
+  producer-consumer-service:
+    build:
+      context: ./producer-consumer
+    container_name: producer-consumer
+    depends_on:
+      - faust-service
+    restart: on-failure
