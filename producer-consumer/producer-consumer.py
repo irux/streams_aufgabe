@@ -6,8 +6,10 @@ import json
 from kafka import KafkaConsumer, KafkaProducer
 import random
 from datetime import datetime
+import os
 random.seed(20)
 
+server_location = os.environ.get("KAFKA_CONNECT")
 
 class Producer(threading.Thread):
 
@@ -21,7 +23,7 @@ class Producer(threading.Thread):
         self.stop_event.set()
 
     def run(self):
-        producer = KafkaProducer(bootstrap_servers='kafka:9092')
+        producer = KafkaProducer(bootstrap_servers=server_location)
 
         while not self.stop_event.is_set():
             analytics_click = self._generate_click()
@@ -56,7 +58,7 @@ class Consumer(multiprocessing.Process):
         self.stop_event.set()
 
     def run(self):
-        consumer = KafkaConsumer(bootstrap_servers='kafka:9092',
+        consumer = KafkaConsumer(bootstrap_servers=server_location,
                                  auto_offset_reset='earliest',
                                  consumer_timeout_ms=2000)
         consumer.subscribe(['ad_campaign_statistics'])
@@ -71,7 +73,7 @@ class Consumer(multiprocessing.Process):
 
 
 def main():
-    time.sleep(35)
+    time.sleep(40)
 
     tasks = [
         Producer(),
