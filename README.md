@@ -1,4 +1,6 @@
-## Instructions
+# Instructions
+
+#### Data processing
 The project already contains a docker-compose.yml file that init the faust app, the kafka-zookeeper and the producer-consumer app. Everything in its own container.
 
 The producer-consumer app produce the following object and send it to the **ad_campaign** topic:
@@ -39,6 +41,29 @@ Kafka is listening to the container interface in the port 9092 and to localhost 
 
 If you want to connect to the kafka container outside the docker network, you need to use localhost:9094.
 
-PD:
+#### REST Endpoint
+
+The faust app already has an http endpoint to query the data on the Faust Tables.
+
+We have two endpoints:
+
+1.)
+
+``
+http://localhost:6066/campaign/stats
+``
+
+where you receive all campaing data and the information about it.
+
+2.)
+
+``
+http://localhost:6066/campaign/stats/{Campaign-ID}
+``
+
+where you receive all campaign data about an specific campaign.
+
+
+#### PD:
 
 if you want to restart everything, you need to use ``docker-compose down `` before you restart the environment.
