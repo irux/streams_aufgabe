@@ -27,12 +27,13 @@ The counter-Agent transform the mention object to the following structure:
 
 and the agent send the transformation over the **ad_campaign_statistics** topic.
 
-
 you only need to do:
 
 ```
 docker-compose up --build
 ```
+
+**The consumer is going to log everything that the ad_campaign_statistics receives.**
 
 Kafka is listening to the container interface in the port 9092 and to localhost in 9094.
 
