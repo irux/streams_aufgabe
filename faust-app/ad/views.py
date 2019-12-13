@@ -13,7 +13,7 @@ async def show_stats(self, request):
 
 @app.page("/campaign/stats/{camp_id}")
 @app.table_route(table=ad_info, match_info='camp_id')
-async def show_stats(self, request, camp_id):
+async def show_specific_stats(self, request, camp_id):
     return self.json(ad_info[camp_id])
 
 
