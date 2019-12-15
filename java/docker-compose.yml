@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    tmpfs: "/datalog"
+
+  kafka:
+    container_name: kafka-container
+    build: ./kafka
+    ports:
+      - "9094:9094"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: INTERNAL://kafka:9092,OUTSIDE://kafka:9094
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,OUTSIDE://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CREATE_TOPICS: "ad_campaign:1:1,ad_campaign_statistics:1:1"
+
+  streams:
+    container_name: streams-container
+    build:
+      context: ./kafkastreams
+    restart: on-failure
+
