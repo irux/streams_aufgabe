@@ -24,4 +24,6 @@ services:
     build:
       context: ./kafkastreams
     restart: on-failure
+    ports:
+      - "8080:8080"
 

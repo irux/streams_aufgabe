@@ -7,6 +7,9 @@ import org.apache.kafka.streams.*;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Materialized;
+
+import org.apache.kafka.streams.state.HostInfo;
+
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.StoreBuilder;
 import org.apache.kafka.streams.state.Stores;
@@ -14,6 +17,9 @@ import processors.AdCampaingProcessor;
 import serializers.JsonDeserializer;
 import serializers.JsonSerializer;
 import service.FactorySerde;
+
+import webserver.WebServer;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,10 +58,14 @@ public class StreamCampaign {
                 .addSink("Sink","ad_campaign_statistics",serdeString.serializer(),serdeAdCampaingStatistics.serializer(),"Process");
 
 
-
-
         final KafkaStreams kafka = new KafkaStreams(builder,props);
         final CountDownLatch latch = new CountDownLatch(1);
+
+        HostInfo info = new HostInfo("localhost",8080);
+
+        WebServer server = new WebServer(kafka,info);
+
+        server.startServer();
 
 
         Runtime.getRuntime().addShutdownHook(new Thread( () -> {
